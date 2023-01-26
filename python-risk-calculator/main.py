@@ -45,8 +45,9 @@ class PositionSizeCalculator(QtWidgets.QWidget):
 
 
         # Create labels to display the results
-        self.position_size_label = QtWidgets.QLabel("")
         self.risk_amount_label = QtWidgets.QLabel("")
+        self.volume_label = QtWidgets.QLabel("")
+        self.position_size_label = QtWidgets.QLabel("")
         self.stop_loss_label = QtWidgets.QLabel("")
         self.margin_label = QtWidgets.QLabel("")
 
@@ -57,11 +58,13 @@ class PositionSizeCalculator(QtWidgets.QWidget):
         layout.addRow("Risk per Trade (%)", self.account_risk_input)
         layout.addRow("Entry Price (USD)", self.entry_price_input)
         layout.addRow("Stop Loss Price (USD)", self.stop_loss_price_input)
-        layout.addRow("Leverage", self.leverage_input)
-        layout.addRow("Risk Amount", self.risk_amount_label)
-        layout.addRow("Position Size", self.position_size_label)
+        layout.addRow("Leverage (x)", self.leverage_input)
+
+        layout.addRow("Risk Amount (USD)", self.risk_amount_label)
+        layout.addRow("Volume (Unit)", self.volume_label)
+        layout.addRow("Position Size (USD)", self.position_size_label)
         layout.addRow("Stop Loss (%)", self.stop_loss_label)
-        layout.addRow("Account Margin", self.margin_label)
+        layout.addRow("Account Margin (USD)", self.margin_label)
 
         self.setLayout(layout)
 
@@ -87,8 +90,9 @@ class PositionSizeCalculator(QtWidgets.QWidget):
         # Calculate position value
         position_value = risk_amount / stop_percentage
 
-        # Calculate position size
-        position_size = position_value / entry_price
+        # Calculate volume (position size)
+        volume = position_value / entry_price
+        ##volume = ((account_size * risk_percentage) / (entry_price - stop_loss_price)) * entry_price
 
         # Calculate account margin
         account_margin = account_size / leverage
@@ -97,7 +101,8 @@ class PositionSizeCalculator(QtWidgets.QWidget):
         # Display results
         self.stop_loss_label.setText(f"{stop_percentage:.2f}")
         self.margin_label.setText(f"{account_margin:.2f}")
-        self.position_size_label.setText(f"{position_size:.2f}")
+        self.volume_label.setText(f"{volume:.2f}")
+        self.position_size_label.setText(f"{position_value:.2f}")
         self.risk_amount_label.setText(f"{risk_amount:.2f}")
 
 
